@@ -18,13 +18,13 @@ package uk.gov.hmrc.example.controllers
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc._
-import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+
 
 @Singleton()
-class MicroserviceHelloWorld @Inject()(cc: ControllerComponents)
-    extends BackendController(cc) {
+class MicroserviceHelloWorld @Inject()(cc: ControllerComponents) extends BackendController(cc) {
 
-  def hello() = Action { implicit request =>
+  def hello(): Action[AnyContent] = Action { implicit request =>
     Ok("Hello world - public zone")
   }
 
