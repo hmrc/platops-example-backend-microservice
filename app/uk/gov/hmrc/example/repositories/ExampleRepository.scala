@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,43 @@
 
 package uk.gov.hmrc.example.repositories
 
-import javax.inject.Inject
-import play.api.libs.json.{Json, OFormat}
-import play.modules.reactivemongo.ReactiveMongoComponent
-import reactivemongo.bson.BSONObjectID
-import uk.gov.hmrc.mongo.ReactiveRepository
-import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
+import javax.inject.{Inject, Singleton}
+import play.api.libs.json.{OFormat, __}
+import play.api.libs.functional.syntax._
+import uk.gov.hmrc.mongo.MongoComponent
+import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
-case class Address(line1: String, line2: String, postCode: String, town: String)
+case class Address(
+  line1   : String,
+  line2   : String,
+  postCode: String,
+  town    : String
+)
 
 object Address {
-  val mongoFormat: OFormat[Address] = Json.format[Address]
+  val mongoFormat: OFormat[Address] =
+   ( (__ \ "line1"   ).format[String]
+   ~ (__ \ "line2"   ).format[String]
+   ~ (__ \ "postCode").format[String]
+   ~ (__ \ "town"    ).format[String]
+   )(Address.apply, unlift(Address.unapply))
 }
 
-class ExampleRepository @Inject()(reactiveMongoComponent: ReactiveMongoComponent)(implicit ec: ExecutionContext)
-    extends ReactiveRepository[Address, BSONObjectID](
-      collectionName = "reports",
-      mongo          = reactiveMongoComponent.mongoConnector.db,
-      domainFormat   = Address.mongoFormat,
-      idFormat       = ReactiveMongoFormats.objectIdFormats
-    )
+@Singleton
+class ExampleRepository @Inject()(
+  mongoComponent: MongoComponent
+)(implicit ec: ExecutionContext
+) extends PlayMongoRepository[Address](
+  mongoComponent = mongoComponent,
+  collectionName = "reports",
+  domainFormat   = Address.mongoFormat,
+  indexes        = Seq.empty
+) {
+  def findAll(): Future[Seq[Address]] =
+    collection.find().toFuture
+
+  def insert(address: Address): Future[Unit] =
+    collection.insertOne(address).toFuture.map(_ => ())
+}

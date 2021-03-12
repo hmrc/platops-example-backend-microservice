@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,29 +16,30 @@
 
 package uk.gov.hmrc.example.repositories
 
-import org.scalatest.Matchers._
-import org.scalatest.WordSpec
+import org.scalatest.OptionValues
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import play.modules.reactivemongo.ReactiveMongoComponent
-import uk.gov.hmrc.mongo.{MongoConnector, MongoSpecSupport}
+import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class ExampleRepositorySpec extends WordSpec with MongoSpecSupport with ScalaFutures with IntegrationPatience {
+class ExampleRepositorySpec
+  extends AnyWordSpec
+     with Matchers
+     with OptionValues
+     with DefaultPlayMongoRepositorySupport[Address]
+     with ScalaFutures
+     with IntegrationPatience {
 
-  private val reactiveMongoComponent: ReactiveMongoComponent =
-    new ReactiveMongoComponent {
-      override def mongoConnector: MongoConnector = mongoConnectorForTest
-    }
-
-  val repo = new ExampleRepository(reactiveMongoComponent)
+  override val repository = new ExampleRepository(mongoComponent)
 
   "The example" should {
     "be able to save an address to mongo and read it back" in {
       val anAddress = Address("Flat 2", "Some Road", "AAAAAA", "London")
 
-      repo.insert(anAddress).futureValue.ok shouldBe true
-      repo.findAll().futureValue.head       shouldBe anAddress
+      repository.insert(anAddress).futureValue
+      repository.findAll().futureValue.headOption.value shouldBe anAddress
     }
   }
 }
