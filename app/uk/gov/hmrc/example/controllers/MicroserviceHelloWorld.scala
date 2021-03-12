@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,14 @@
 package uk.gov.hmrc.example.controllers
 
 import javax.inject.{Inject, Singleton}
-import play.api.mvc._
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 
 @Singleton()
 class MicroserviceHelloWorld @Inject()(cc: ControllerComponents) extends BackendController(cc) {
 
-  def hello(): Action[AnyContent] = Action { implicit request =>
+  def hello(): Action[AnyContent] = Action {
     Ok("Hello world - public zone")
   }
-
 }
