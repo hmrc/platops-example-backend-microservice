@@ -1,18 +1,17 @@
-import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
+import uk.gov.hmrc.DefaultBuildSettings
 
 val silencerVersion = "1.7.3"
 
 lazy val microservice = Project("platops-example-backend-microservice", file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
+  .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .settings(
     scalaVersion        := "2.12.13",
     majorVersion        := 0,
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test
   )
-  .settings(publishingSettings: _*)
+  .settings(SbtDistributablesPlugin.publishingSettings: _*)
   .configs(IntegrationTest)
-  .settings(integrationTestSettings(): _*)
+  .settings(DefaultBuildSettings.integrationTestSettings(): _*)
   .settings(PlayKeys.playDefaultPort := 9931)
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(
