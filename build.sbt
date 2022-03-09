@@ -1,11 +1,11 @@
 import uk.gov.hmrc.DefaultBuildSettings
 
-val silencerVersion = "1.7.3"
+val silencerVersion = "1.7.7"
 
 lazy val microservice = Project("platops-example-backend-microservice", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .settings(
-    scalaVersion        := "2.12.13",
+    scalaVersion        := "2.12.15",
     majorVersion        := 0,
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test
   )
