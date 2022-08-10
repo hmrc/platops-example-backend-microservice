@@ -51,8 +51,8 @@ class ExampleRepository @Inject()(
   indexes        = Seq.empty
 ) {
   def findAll(): Future[Seq[Address]] =
-    collection.find().toFuture
+    collection.find().toFuture()
 
   def insert(address: Address): Future[Unit] =
-    collection.insertOne(address).toFuture.map(_ => ())
+    collection.insertOne(address).toFuture().map(_ => ())
 }
