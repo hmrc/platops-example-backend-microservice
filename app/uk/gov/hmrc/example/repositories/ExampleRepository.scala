@@ -17,27 +17,35 @@
 package uk.gov.hmrc.example.repositories
 
 import javax.inject.{Inject, Singleton}
+import org.mongodb.scala.model.{IndexModel, IndexOptions, Indexes}
 import play.api.libs.json.{OFormat, __}
 import play.api.libs.functional.syntax._
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
+import java.time.Instant
+import java.util.concurrent.TimeUnit
 import scala.concurrent.{ExecutionContext, Future}
 
 case class Address(
   line1   : String,
   line2   : String,
   postCode: String,
-  town    : String
+  town    : String,
+  created : Instant
 )
 
 object Address {
-  val mongoFormat: OFormat[Address] =
-   ( (__ \ "line1"   ).format[String]
-   ~ (__ \ "line2"   ).format[String]
-   ~ (__ \ "postCode").format[String]
-   ~ (__ \ "town"    ).format[String]
-   )(Address.apply, unlift(Address.unapply))
+  val mongoFormat: OFormat[Address] = {
+    import MongoJavatimeFormats.Implicits.jatInstantFormat
+    ( (__ \ "line1"   ).format[String]
+    ~ (__ \ "line2"   ).format[String]
+    ~ (__ \ "postCode").format[String]
+    ~ (__ \ "town"    ).format[String]
+    ~ (__ \ "created" ).format[Instant]
+    )(Address.apply, unlift(Address.unapply))
+  }
 }
 
 @Singleton
@@ -48,7 +56,7 @@ class ExampleRepository @Inject()(
   mongoComponent = mongoComponent,
   collectionName = "reports",
   domainFormat   = Address.mongoFormat,
-  indexes        = Seq.empty
+  indexes        = Seq(IndexModel(Indexes.ascending("created"), IndexOptions().expireAfter(20, TimeUnit.MINUTES)))
 ) {
   def findAll(): Future[Seq[Address]] =
     collection.find().toFuture()

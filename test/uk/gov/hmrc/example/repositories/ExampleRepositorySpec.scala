@@ -22,6 +22,8 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class ExampleRepositorySpec
@@ -36,7 +38,7 @@ class ExampleRepositorySpec
 
   "The example" should {
     "be able to save an address to mongo and read it back" in {
-      val anAddress = Address("Flat 2", "Some Road", "AAAAAA", "London")
+      val anAddress = Address("Flat 2", "Some Road", "AAAAAA", "London", Instant.now().truncatedTo(ChronoUnit.MILLIS))
 
       repository.insert(anAddress).futureValue
       repository.findAll().futureValue.headOption.value shouldBe anAddress
