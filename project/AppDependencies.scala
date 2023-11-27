@@ -4,18 +4,18 @@ import sbt._
 
 object AppDependencies {
 
-  private val bootstrapPlayVersion = "7.23.0"
-  private val hmrcMongoVersion     = "1.4.0"
+  private val bootstrapPlayVersion = "8.1.0"
+  private val hmrcMongoVersion     = "1.6.0"
 
   val compile = Seq(
-    "uk.gov.hmrc"       %% "bootstrap-backend-play-28" % bootstrapPlayVersion,
-    "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"        % hmrcMongoVersion,
+    "uk.gov.hmrc"       %% "bootstrap-backend-play-30" % bootstrapPlayVersion,
+    "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-30"        % hmrcMongoVersion,
     PlayImport.ws
   )
 
   val test = Seq(
-    "uk.gov.hmrc"       %% "bootstrap-test-play-28"    % bootstrapPlayVersion % Test,
-    "uk.gov.hmrc.mongo" %% "hmrc-mongo-test-play-28"   % hmrcMongoVersion     % Test
+    "uk.gov.hmrc"       %% "bootstrap-test-play-30"    % bootstrapPlayVersion % Test,
+    "uk.gov.hmrc.mongo" %% "hmrc-mongo-test-play-30"   % hmrcMongoVersion     % Test
   )
 
   val it = Seq.empty
