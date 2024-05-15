@@ -17,7 +17,5 @@ object AppDependencies {
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-test-play-30"   % hmrcMongoVersion     % Test
   )
 
-  val it = Seq(
-    "org.jsoup" %  "jsoup"  % "1.17.2"
-  )
+  val it = Seq.empty
 }
