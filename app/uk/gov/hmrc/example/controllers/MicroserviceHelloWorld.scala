@@ -25,6 +25,7 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 class MicroserviceHelloWorld @Inject()(cc: ControllerComponents) extends BackendController(cc) {
 
   def hello(): Action[AnyContent] = Action {
+    println("hello")
     Ok("Hello world - public zone")
   }
 
