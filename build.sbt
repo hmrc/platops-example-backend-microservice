@@ -1,6 +1,6 @@
 import uk.gov.hmrc.DefaultBuildSettings
 
-ThisBuild / scalaVersion := "2.13.12"
+ThisBuild / scalaVersion := "3.3.3"
 ThisBuild / majorVersion := 0
 
 lazy val microservice = Project("platops-example-backend-microservice", file("."))

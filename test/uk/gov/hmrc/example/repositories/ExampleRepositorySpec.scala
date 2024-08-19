@@ -32,16 +32,13 @@ class ExampleRepositorySpec
      with OptionValues
      with DefaultPlayMongoRepositorySupport[Address]
      with ScalaFutures
-     with IntegrationPatience {
+     with IntegrationPatience:
+  
+  override val repository: ExampleRepository = ExampleRepository(mongoComponent)
 
-  override val repository = new ExampleRepository(mongoComponent)
-
-  "The example" should {
-    "be able to save an address to mongo and read it back" in {
+  "The example" should:
+    "be able to save an address to mongo and read it back" in:
       val anAddress = Address("Flat 2", "Some Road", "AAAAAA", "London", Instant.now().truncatedTo(ChronoUnit.MILLIS))
 
       repository.insert(anAddress).futureValue
       repository.findAll().futureValue.headOption.value shouldBe anAddress
-    }
-  }
-}
