@@ -29,5 +29,5 @@ class MicroserviceHelloWorldControllerSpec extends AnyWordSpec with Matchers:
   "GET /" should:
     "return 200" in:
       val controller = new MicroserviceHelloWorld(stubControllerComponents())
-      val result     = controller.hello()(fakeRequest)
+      val result     = controller.helloWorld(fakeRequest)
       status(result) shouldBe Status.OK
