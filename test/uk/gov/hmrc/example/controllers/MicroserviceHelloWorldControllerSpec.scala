@@ -22,15 +22,12 @@ import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-class MicroserviceHelloWorldControllerSpec extends AnyWordSpec with Matchers {
+class MicroserviceHelloWorldControllerSpec extends AnyWordSpec with Matchers:
 
   val fakeRequest = FakeRequest("GET", "/")
 
-  "GET /" should {
-    "return 200" in {
+  "GET /" should:
+    "return 200" in:
       val controller = new MicroserviceHelloWorld(stubControllerComponents())
-      val result     = controller.hello()(fakeRequest)
+      val result     = controller.helloWorld(fakeRequest)
       status(result) shouldBe Status.OK
-    }
-  }
-}

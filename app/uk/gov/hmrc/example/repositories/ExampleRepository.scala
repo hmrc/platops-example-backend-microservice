@@ -18,6 +18,7 @@ package uk.gov.hmrc.example.repositories
 
 import javax.inject.{Inject, Singleton}
 import org.mongodb.scala.model.{IndexModel, IndexOptions, Indexes}
+import org.mongodb.scala.ObservableFuture
 import play.api.libs.json.{OFormat, __}
 import play.api.libs.functional.syntax._
 import uk.gov.hmrc.mongo.MongoComponent
@@ -36,31 +37,34 @@ case class Address(
   created : Instant
 )
 
-object Address {
-  val mongoFormat: OFormat[Address] = {
+object Address:
+  val mongoFormat: OFormat[Address] =
     import MongoJavatimeFormats.Implicits.jatInstantFormat
     ( (__ \ "line1"   ).format[String]
     ~ (__ \ "line2"   ).format[String]
     ~ (__ \ "postCode").format[String]
     ~ (__ \ "town"    ).format[String]
     ~ (__ \ "created" ).format[Instant]
-    )(Address.apply, unlift(Address.unapply))
-  }
-}
+    )(Address.apply, pt => Tuple.fromProductTyped(pt))
 
 @Singleton
 class ExampleRepository @Inject()(
   mongoComponent: MongoComponent
-)(implicit ec: ExecutionContext
+)(using
+  ExecutionContext
 ) extends PlayMongoRepository[Address](
   mongoComponent = mongoComponent,
   collectionName = "reports",
   domainFormat   = Address.mongoFormat,
   indexes        = Seq(IndexModel(Indexes.ascending("created"), IndexOptions().expireAfter(20, TimeUnit.MINUTES)))
-) {
+):
   def findAll(): Future[Seq[Address]] =
-    collection.find().toFuture()
+    collection
+      .find()
+      .toFuture()
 
   def insert(address: Address): Future[Unit] =
-    collection.insertOne(address).toFuture().map(_ => ())
-}
+    collection
+      .insertOne(address)
+      .toFuture()
+      .map(_ => ())
