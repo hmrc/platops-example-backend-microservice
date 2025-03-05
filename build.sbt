@@ -1,7 +1,8 @@
 import uk.gov.hmrc.DefaultBuildSettings
 
-ThisBuild / scalaVersion := "3.3.3"
-ThisBuild / majorVersion := 0
+ThisBuild / scalaVersion  := "3.3.5"
+ThisBuild / majorVersion  := 0
+ThisBuild / scalacOptions += "-Wconf:msg=Flag.*repeatedly:s"
 
 lazy val microservice = Project("platops-example-backend-microservice", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
