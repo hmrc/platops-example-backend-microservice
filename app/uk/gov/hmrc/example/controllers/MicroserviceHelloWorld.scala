@@ -26,7 +26,9 @@ class MicroserviceHelloWorld @Inject()(
   cc: ControllerComponents
 ) extends BackendController(cc):
 
-  val helloWorld: Action[AnyContent] = Action: 
-    Ok("Hello world - public zone")
+  val helloWorld: Action[AnyContent] =
+    Action:
+      Ok("Hello world - public zone")
 
-  val test: String = "test"
+  val test: String =
+    "test"
